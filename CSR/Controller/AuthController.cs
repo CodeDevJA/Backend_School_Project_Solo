@@ -28,10 +28,15 @@ public class AuthController : ControllerBase
             Console.WriteLine(claim.ToString());
         }
 
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString))
         {
             return Unauthorized();
+        }
+
+        if (!Guid.TryParse(userIdString, out var userId))
+        {
+            return Unauthorized(); // Invalid GUID format
         }
 
         var user = context.Users.Find(userId);

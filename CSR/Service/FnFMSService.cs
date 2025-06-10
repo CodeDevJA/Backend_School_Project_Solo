@@ -1,51 +1,131 @@
-
+using System;
+using System.Threading.Tasks;
 
 public class FnFMSService : IFnFMSService
 {
-    private readonly FnFMSRepository _repository;
+    private readonly IFnFMSRepository _repository;
 
-    public FnFMSService(FnFMSRepository repository)
+    public FnFMSService(IFnFMSRepository repository)
     {
         _repository = repository;
     }
 
-    public Task<Guid> CreateRootFolderAsync(CreateRootFolderRequest request)
+    public async Task<CreateRootFolderResponseDto> CreateRootFolderAsync(CreateRootFolderRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var folder = await _repository.CreateRootFolderAsync(request.FolderName);
+            return new CreateRootFolderResponseDto { FolderId = folder.FolderId, FolderName = folder.Foldername };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error creating root folder: {ex.Message}");
+        }
     }
 
-    public Task<Guid> CreateFolderInFolderAsync(CreateFolderInFolderRequest request)
+    public async Task<CreateFolderInFolderResponseDto> CreateFolderInFolderAsync(CreateFolderInFolderRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var folder = await _repository.CreateFolderInFolderAsync(request.FolderName, request.ParentFolderId);
+            return new CreateFolderInFolderResponseDto
+            {
+                FolderId = folder.FolderId,
+                FolderName = folder.Foldername,
+                ParentFolderId = folder.ParentFolderId.Value
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error creating folder in folder: {ex.Message}");
+        }
     }
 
-    public Task<bool> UpdateFolderNameAsync(UpdateFolderNameRequest request)
+    public async Task<UpdateFolderNameResponseDto> UpdateFolderNameAsync(Guid folderId, UpdateFolderNameRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var updatedFolder = await _repository.UpdateFolderNameAsync(folderId, request.NewFolderName);
+            return new UpdateFolderNameResponseDto { FolderId = updatedFolder.FolderId, UpdatedFolderName = updatedFolder.Foldername };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error updating folder name: {ex.Message}");
+        }
     }
 
-    public Task<bool> DeleteFolderAsync(DeleteFolderRequest request)
+    public async Task<DeleteFolderResponseDto> DeleteFolderAsync(Guid folderId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var isDeleted = await _repository.DeleteFolderAsync(folderId);
+            return new DeleteFolderResponseDto { FolderId = folderId, IsDeleted = isDeleted };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error deleting folder: {ex.Message}");
+        }
     }
 
-    public Task<Guid> UploadFileToFolderAsync(UploadFileToFolderRequest request)
+    public async Task<UploadFileToFolderResponseDto> UploadFileToFolderAsync(UploadFileToFolderRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var file = await _repository.UploadFileToFolderAsync(request.Filename, request.FileContent, request.ParentFolderId);
+            return new UploadFileToFolderResponseDto
+            {
+                FileId = file.FileId,
+                Filename = file.Filename,
+                ParentFolderId = file.ParentFolderId
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error uploading file to folder: {ex.Message}");
+        }
     }
 
-    public Task<DownloadFileFromFolderResponse?> DownloadFileFromFolderAsync(Guid fileId)
+    public async Task<DownloadFileFromFolderResponseDto> DownloadFileFromFolderAsync(Guid fileId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var file = await _repository.DownloadFileFromFolderAsync(fileId);
+            return new DownloadFileFromFolderResponseDto
+            {
+                FileId = file.FileId,
+                Filename = file.Filename,
+                FileContent = file.FileContent
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error downloading file from folder: {ex.Message}");
+        }
     }
 
-    public Task<bool> UpdateFileNameAsync(UpdateFileNameRequest request)
+    public async Task<UpdateFileNameResponseDto> UpdateFileNameAsync(Guid fileId, UpdateFileNameRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var updatedFile = await _repository.UpdateFileNameAsync(fileId, request.NewFilename);
+            return new UpdateFileNameResponseDto { FileId = updatedFile.FileId, UpdatedFilename = updatedFile.Filename };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error updating file name: {ex.Message}");
+        }
     }
 
-    public Task<bool> DeleteFileAsync(DeleteFileRequest request)
+    public async Task<DeleteFileResponseDto> DeleteFileAsync(Guid fileId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var isDeleted = await _repository.DeleteFileAsync(fileId);
+            return new DeleteFileResponseDto { FileId = fileId, IsDeleted = isDeleted };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error deleting file: {ex.Message}");
+        }
     }
 }

@@ -1,18 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 public interface IFnFMSRepository
 {
-    // Folder-methods
-    Task<Guid> CreateRootFolderAsync(FolderEntity folder);
-    Task<Guid> CreateFolderInFolderAsync(FolderEntity folder);
-    Task<bool> UpdateFolderNameAsync(Guid folderId, string newFolderName);
+    Task<FolderEntity> CreateRootFolderAsync(string folderName);
+    Task<FolderEntity> CreateFolderInFolderAsync(string folderName, Guid parentFolderId);
+    Task<FolderEntity> UpdateFolderNameAsync(Guid folderId, string newFolderName);
     Task<bool> DeleteFolderAsync(Guid folderId);
 
-    // File-methods
-    Task<Guid> UploadFileToFolderAsync(FileEntity file);
-    Task<FileEntity?> DownloadFileFromFolderAsync(Guid fileId);
-    Task<bool> UpdateFileNameAsync(Guid fileId, string newFileName);
+    Task<FileEntity> UploadFileToFolderAsync(string filename, byte[] fileContent, Guid parentFolderId);
+    Task<FileEntity> DownloadFileFromFolderAsync(Guid fileId);
+    Task<FileEntity> UpdateFileNameAsync(Guid fileId, string newFilename);
     Task<bool> DeleteFileAsync(Guid fileId);
 }

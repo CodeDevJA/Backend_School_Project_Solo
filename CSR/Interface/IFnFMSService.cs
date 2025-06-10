@@ -1,18 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 public interface IFnFMSService
 {
-    // Folder Operations
-    Task<Guid> CreateRootFolderAsync(CreateRootFolderRequest request);
-    Task<Guid> CreateFolderInFolderAsync(CreateFolderInFolderRequest request);
-    Task<bool> UpdateFolderNameAsync(UpdateFolderNameRequest request);
-    Task<bool> DeleteFolderAsync(DeleteFolderRequest request);
+    Task<CreateRootFolderResponseDto> CreateRootFolderAsync(CreateRootFolderRequestDto request);
+    Task<CreateFolderInFolderResponseDto> CreateFolderInFolderAsync(CreateFolderInFolderRequestDto request);
+    Task<UpdateFolderNameResponseDto> UpdateFolderNameAsync(Guid folderId, UpdateFolderNameRequestDto request);
+    Task<DeleteFolderResponseDto> DeleteFolderAsync(Guid folderId);
 
-    // File Operations
-    Task<Guid> UploadFileToFolderAsync(UploadFileToFolderRequest request);
-    Task<DownloadFileFromFolderResponse?> DownloadFileFromFolderAsync(Guid fileId);
-    Task<bool> UpdateFileNameAsync(UpdateFileNameRequest request);
-    Task<bool> DeleteFileAsync(DeleteFileRequest request);
+    Task<UploadFileToFolderResponseDto> UploadFileToFolderAsync(UploadFileToFolderRequestDto request);
+    Task<DownloadFileFromFolderResponseDto> DownloadFileFromFolderAsync(Guid fileId);
+    Task<UpdateFileNameResponseDto> UpdateFileNameAsync(Guid fileId, UpdateFileNameRequestDto request);
+    Task<DeleteFileResponseDto> DeleteFileAsync(Guid fileId);
 }

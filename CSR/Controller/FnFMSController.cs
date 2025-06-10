@@ -1,57 +1,134 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
-[Authorize(AuthenticationSchemes = IdentityConstants.BearerScheme)]
+[Authorize]
+[Route("api/[controller]")]
 [ApiController]
-[Route("api/fnfms")]
 public class FnFMSController : ControllerBase
 {
-    private readonly FnFMSService _service;
+    private readonly IFnFMSService _fnFMSService;
 
-    public FnFMSController(FnFMSService service)
+    public FnFMSController(IFnFMSService fnFMSService)
     {
-        _service = service;
+        _fnFMSService = fnFMSService;
     }
 
-    public Task<ActionResult<Guid>> CreateRootFolderAsync([FromBody] CreateRootFolderRequest request)
+    [HttpPost("CreateRootFolder")]
+    public async Task<ActionResult<CreateRootFolderResponseDto>> CreateRootFolder(
+        [FromBody] CreateRootFolderRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _fnFMSService.CreateRootFolderAsync(request);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 
-    public Task<ActionResult<Guid>> CreateFolderInFolderAsync([FromBody] CreateFolderInFolderRequest request)
+    [HttpPost("CreateFolderInFolder")]
+    public async Task<ActionResult<CreateFolderInFolderResponseDto>> CreateFolderInFolder(
+        [FromBody] CreateFolderInFolderRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _fnFMSService.CreateFolderInFolderAsync(request);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 
-    public Task<ActionResult<bool>> UpdateFolderNameAsync([FromBody] UpdateFolderNameRequest request)
+    [HttpPut("UpdateFolderName/{folderId}")]
+    public async Task<ActionResult<UpdateFolderNameResponseDto>> UpdateFolderName(
+        Guid folderId, [FromBody] UpdateFolderNameRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _fnFMSService.UpdateFolderNameAsync(folderId, request);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 
-    public Task<ActionResult<bool>> DeleteFolderAsync([FromBody] DeleteFolderRequest request)
+    [HttpDelete("DeleteFolder/{folderId}")]
+    public async Task<ActionResult<DeleteFolderResponseDto>> DeleteFolder(Guid folderId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _fnFMSService.DeleteFolderAsync(folderId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 
-    public Task<ActionResult<Guid>> UploadFileToFolderAsync([FromBody] UploadFileToFolderRequest request)
+    [HttpPost("UploadFileToFolder")]
+    public async Task<ActionResult<UploadFileToFolderResponseDto>> UploadFileToFolder(
+        [FromBody] UploadFileToFolderRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _fnFMSService.UploadFileToFolderAsync(request);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 
-    public Task<ActionResult<DownloadFileFromFolderResponse?>> DownloadFileFromFolderAsync(Guid fileId)
+    [HttpGet("DownloadFileFromFolder/{fileId}")]
+    public async Task<ActionResult<DownloadFileFromFolderResponseDto>> DownloadFileFromFolder(Guid fileId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _fnFMSService.DownloadFileFromFolderAsync(fileId);
+            return File(result.FileContent, "application/octet-stream", result.Filename);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 
-    public Task<ActionResult<bool>> UpdateFileNameAsync([FromBody] UpdateFileNameRequest request)
+    [HttpPut("UpdateFileName/{fileId}")]
+    public async Task<ActionResult<UpdateFileNameResponseDto>> UpdateFileName(
+        Guid fileId, [FromBody] UpdateFileNameRequestDto request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _fnFMSService.UpdateFileNameAsync(fileId, request);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 
-    public Task<ActionResult<bool>> DeleteFileAsync([FromBody] DeleteFileRequest request)
+    [HttpDelete("DeleteFile/{fileId}")]
+    public async Task<ActionResult<DeleteFileResponseDto>> DeleteFile(Guid fileId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await _fnFMSService.DeleteFileAsync(fileId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
     }
 }

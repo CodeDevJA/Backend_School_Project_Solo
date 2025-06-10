@@ -21,7 +21,7 @@ public class FnFMSController : ControllerBase
     {
         try
         {
-            var result = await _fnFMSService.CreateRootFolderAsync(request);
+            var result = await _fnFMSService.CreateRootFolderAsync(request.FolderName);
             return Ok(result);
         }
         catch (Exception ex)

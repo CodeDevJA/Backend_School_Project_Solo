@@ -10,11 +10,11 @@ public class FnFMSService : IFnFMSService
         _repository = repository;
     }
 
-    public async Task<CreateRootFolderResponseDto> CreateRootFolderAsync(CreateRootFolderRequestDto request)
+    public async Task<CreateRootFolderResponseDto> CreateRootFolderAsync(string folderName)
     {
         try
         {
-            var folder = await _repository.CreateRootFolderAsync(request.FolderName);
+            var folder = await _repository.CreateRootFolderAsync(folderName);
             return new CreateRootFolderResponseDto { FolderId = folder.FolderId, FolderName = folder.Foldername };
         }
         catch (Exception ex)

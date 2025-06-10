@@ -28,8 +28,8 @@ public class Program
 
         builder.Services.AddControllers();
         
-        // builder.Services.AddScoped<IFolderService, FolderService>();
-        // builder.Services.AddScoped<IFolderRepository, FolderRepository>();
+        builder.Services.AddScoped<IFnFMSService, FnFMSService>();
+        builder.Services.AddScoped<IFnFMSRepository, FnFMSRepository>();
 
         var app = builder.Build();
 

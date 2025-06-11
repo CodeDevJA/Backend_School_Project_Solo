@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 [Authorize]
@@ -15,120 +16,38 @@ public class FnFMSController : ControllerBase
         _fnFMSService = fnFMSService;
     }
 
-    [HttpPost("CreateRootFolder")]
-    public async Task<ActionResult<CreateRootFolderResponseDto>> CreateRootFolder(
-        [FromBody] CreateRootFolderRequestDto request)
+    // Endpoints
+    // Folder
+    // CreateRootFolder
+    [HttpPost("folder/create/root-folder")]
+    [Authorize]
+    public async Task<IActionResult> CreateRootFolder([FromBody] CreateRootFolderRequestDto request)
     {
         try
         {
-            var result = await _fnFMSService.CreateRootFolderAsync(request.FolderName);
-            return Ok(result);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var folderEntity = await _fnFMSService.CreateRootFolderAsync(userId, request);
+
+            return Ok(folderEntity);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            return BadRequest(new { Error = ex.Message });
+            return StatusCode(500, exception.Message);
         }
     }
 
-    [HttpPost("CreateFolderInFolder")]
-    public async Task<ActionResult<CreateFolderInFolderResponseDto>> CreateFolderInFolder(
-        [FromBody] CreateFolderInFolderRequestDto request)
-    {
-        try
-        {
-            var result = await _fnFMSService.CreateFolderInFolderAsync(request);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
-    }
+    // CreateFolderInFolder
+    // UpdateFolderName
+    // DeleteFolder
 
-    [HttpPut("UpdateFolderName/{folderId}")]
-    public async Task<ActionResult<UpdateFolderNameResponseDto>> UpdateFolderName(
-        Guid folderId, [FromBody] UpdateFolderNameRequestDto request)
-    {
-        try
-        {
-            var result = await _fnFMSService.UpdateFolderNameAsync(folderId, request);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
-    }
-
-    [HttpDelete("DeleteFolder/{folderId}")]
-    public async Task<ActionResult<DeleteFolderResponseDto>> DeleteFolder(Guid folderId)
-    {
-        try
-        {
-            var result = await _fnFMSService.DeleteFolderAsync(folderId);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
-    }
-
-    [HttpPost("UploadFileToFolder")]
-    public async Task<ActionResult<UploadFileToFolderResponseDto>> UploadFileToFolder(
-        [FromBody] UploadFileToFolderRequestDto request)
-    {
-        try
-        {
-            var result = await _fnFMSService.UploadFileToFolderAsync(request);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
-    }
-
-    [HttpGet("DownloadFileFromFolder/{fileId}")]
-    public async Task<ActionResult<DownloadFileFromFolderResponseDto>> DownloadFileFromFolder(Guid fileId)
-    {
-        try
-        {
-            var result = await _fnFMSService.DownloadFileFromFolderAsync(fileId);
-            return File(result.FileContent, "application/octet-stream", result.Filename);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
-    }
-
-    [HttpPut("UpdateFileName/{fileId}")]
-    public async Task<ActionResult<UpdateFileNameResponseDto>> UpdateFileName(
-        Guid fileId, [FromBody] UpdateFileNameRequestDto request)
-    {
-        try
-        {
-            var result = await _fnFMSService.UpdateFileNameAsync(fileId, request);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
-    }
-
-    [HttpDelete("DeleteFile/{fileId}")]
-    public async Task<ActionResult<DeleteFileResponseDto>> DeleteFile(Guid fileId)
-    {
-        try
-        {
-            var result = await _fnFMSService.DeleteFileAsync(fileId);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
-    }
+    // File
+    // UploadFileToFolder
+    // DownloadFileFromFolder
+    // UpdateFileName
+    // DeleteFile
 }

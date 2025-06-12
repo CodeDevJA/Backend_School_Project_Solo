@@ -16,9 +16,10 @@ public interface IFnFMSService
 
     // Method - Folder - DeleteFolderAsync
     Task<DeleteFolderResponseDto> DeleteFolderAsync(Guid userId, DeleteFolderRequestDto request);
-    
+
 
     // Method - File - UploadFileToFolderAsync
+    Task<UploadFileResponseDto?> UploadFileToFolderAsync(Guid userId, UploadFileRequestDto request);
 
     // Method - File - DownloadFileFromFolderAsync
 
@@ -153,6 +154,44 @@ public class FnFMSService : IFnFMSService
     }
 
     // Method - File - UploadFileToFolderAsync
+    public async Task<UploadFileResponseDto?> UploadFileToFolderAsync(Guid userId, UploadFileRequestDto request)
+    {
+        // Fetch parent folder entity
+        var parentFolder = await _repository.GetFolderByIdAsync(request.ParentFolderId);
+        if (parentFolder is null || parentFolder.ParentUserId != userId)
+        {
+            throw new Exception("Folder not found or unauthorized.");
+        }
+
+        // Convert IFormFile to Byte[] Array
+        using var memoryStream = new MemoryStream();
+        await request.File.CopyToAsync(memoryStream);
+        var fileBytes = memoryStream.ToArray();
+
+        // Create FileEntity
+        var newFile = new FileEntity
+        {
+            FileId = Guid.NewGuid(),
+            Filename = request.File.FileName,
+            FileContent = fileBytes,
+            ParentFolderId = request.ParentFolderId,
+            ParentFolder = parentFolder
+        };
+
+        // Save file to database
+        var savedFile = await _repository.SaveFileAsync(newFile);
+
+        // Convert Byte[] to Stream for response
+        var fileStream = new MemoryStream(savedFile.FileContent);
+
+        return new UploadFileResponseDto
+        {
+            FileId = savedFile.FileId,
+            Filename = savedFile.Filename,
+            FileStream = fileStream
+        };
+    }
+
     // Method - File - DownloadFileFromFolderAsync
     // Method - File - UpdateFileNameAsync
     // Method - File - DeleteFileAsync

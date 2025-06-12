@@ -1,43 +1,14 @@
 // DTO - Request
-public class UploadFileToFolderRequestDto
+public class UploadFileRequestDto
 {
-    public required string Filename { get; set; }
-    public required byte[] FileContent { get; set; }
     public required Guid ParentFolderId { get; set; }
+    public required IFormFile File { get; set; } // IFormFile -> Stream -> Byte[]
 }
 
 // DTO - Response
-public class UploadFileToFolderResponseDto
+public class UploadFileResponseDto
 {
-    public required Guid FileId { get; set; }
+    public Guid FileId { get; set; }
     public required string Filename { get; set; }
-    public required Guid ParentFolderId { get; set; }
-}
-
-// DTO - Response
-public class DownloadFileFromFolderResponseDto
-{
-    public required Guid FileId { get; set; }
-    public required string Filename { get; set; }
-    public required byte[] FileContent { get; set; }
-}
-
-// DTO - Request
-public class UpdateFileNameRequestDto
-{
-    public required string NewFilename { get; set; }
-}
-
-// DTO - Response
-public class UpdateFileNameResponseDto
-{
-    public required Guid FileId { get; set; }
-    public required string UpdatedFilename { get; set; }
-}
-
-// DTO - Response
-public class DeleteFileResponseDto
-{
-    public required Guid FileId { get; set; }
-    public required bool IsDeleted { get; set; }
+    public required Stream FileStream { get; set; } // Byte[] -> Stream -> IFormFile
 }

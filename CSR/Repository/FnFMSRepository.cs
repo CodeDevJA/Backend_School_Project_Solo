@@ -7,6 +7,7 @@ public interface IFnFMSRepository
     // Method - User - GetUserById - NavigationObject
     Task<UserEntity?> GetUserByIdAsync(Guid userId);
 
+
     // Method - Folder - GetFolderById - NavigationObject
     Task<FolderEntity?> GetFolderByIdAsync(Guid folderId);
 
@@ -23,7 +24,11 @@ public interface IFnFMSRepository
     Task DeleteFolderAsync(FolderEntity folderEntity);
 
 
+    // Method - File - GetFileById - NavigationObject
+    Task<FileEntity?> GetFileByIdAsync(Guid fileId);
+
     // Method - File - UploadFileToFolderAsync
+    Task<FileEntity> SaveFileAsync(FileEntity newFile);
 
     // Method - File - DownloadFileFromFolderAsync
 
@@ -59,6 +64,12 @@ public class FnFMSRepository : IFnFMSRepository
             .FirstOrDefaultAsync(f => f.FolderId == folderId);
     }
 
+    // Method - File - GetFileById - NavigationObject
+    public async Task<FileEntity?> GetFileByIdAsync(Guid fileId)
+    {
+        return await _context.Files.FirstOrDefaultAsync(f => f.FileId == fileId);
+    }
+
     // Method - Folder - CreateRootFolder
     public async Task<FolderEntity> CreateRootFolderAsync(FolderEntity newRootfolder)
     {
@@ -91,6 +102,13 @@ public class FnFMSRepository : IFnFMSRepository
 
 
     // Method - File - UploadFileToFolder
+    public async Task<FileEntity> SaveFileAsync(FileEntity newFile)
+    {
+        _context.Files.Add(newFile);
+        await _context.SaveChangesAsync();
+        return newFile;
+    }
+
     // Method - File - DownloadFileFromFolder
     // Method - File - UpdateFileName
     // Method - File - DeleteFile

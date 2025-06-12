@@ -12,6 +12,7 @@ public interface IFnFMSService
     Task<FolderResponseDto?> CreateFolderInFolderAsync(Guid userId, CreateFolderInFolderRequestDto request);
 
     // Method - Folder - UpdateFolderNameAsync
+    Task<FolderResponseDto?> UpdateFolderNameAsync(Guid userId, UpdateFolderNameRequestDto request);
 
     // Method - Folder - DeleteFolderAsync
 
@@ -23,7 +24,7 @@ public interface IFnFMSService
     // Method - File - UpdateFileNameAsync
 
     // Method - File - DeleteFileAsync
-    
+
 }
 
 public class FnFMSService : IFnFMSService
@@ -104,8 +105,28 @@ public class FnFMSService : IFnFMSService
         };
     }
 
-
     // Method - Folder - UpdateFolderNameAsync
+    public async Task<FolderResponseDto?> UpdateFolderNameAsync(Guid userId, UpdateFolderNameRequestDto request)
+    {
+        // Fetch folder entity
+        var folderEntity = await _repository.GetFolderByIdAsync(request.FolderId);
+        if (folderEntity is null || folderEntity.ParentUserId != userId)
+        {
+            throw new Exception("Folder not found or unauthorized.");
+        }
+
+        // Update folder name
+        folderEntity.Foldername = request.NewFolderName;
+        await _repository.UpdateFolderAsync(folderEntity);
+
+        // Return response DTO
+        return new FolderResponseDto
+        {
+            FolderId = folderEntity.FolderId,
+            FolderName = folderEntity.Foldername
+        };
+    }
+
     // Method - Folder - DeleteFolderAsync
 
     // Method - File - UploadFileToFolderAsync

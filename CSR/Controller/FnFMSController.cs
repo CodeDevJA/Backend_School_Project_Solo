@@ -71,6 +71,32 @@ public class FnFMSController : ControllerBase
     }
 
     // Endpoint - Folder - UpdateFolderName
+    [HttpPut("folder/update/name")]
+    [Authorize]
+    public async Task<IActionResult> UpdateFolderName([FromBody] UpdateFolderNameRequestDto request)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var result = await _fnFMSService.UpdateFolderNameAsync(userId, request);
+            if (result is null)
+            {
+                return NotFound("Folder not found or update failed.");
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     // Endpoint - Folder - DeleteFolder
 
     // Endpoint - File - UploadFileToFolder

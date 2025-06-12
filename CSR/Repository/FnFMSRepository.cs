@@ -17,6 +17,7 @@ public interface IFnFMSRepository
     Task<FolderEntity> CreateNestedFolderAsync(FolderEntity newNestedFolder);
 
     // Method - Folder - UpdateFolderNameAsync
+    Task UpdateFolderAsync(FolderEntity updatedFolderName);
 
     // Method - Folder - DeleteFolderAsync
 
@@ -56,7 +57,7 @@ public class FnFMSRepository : IFnFMSRepository
             .Include(f => f.Files) // Include files if needed
             .FirstOrDefaultAsync(f => f.FolderId == folderId);
     }
-    
+
     // Method - Folder - CreateRootFolder
     public async Task<FolderEntity> CreateRootFolderAsync(FolderEntity newRootfolder)
     {
@@ -74,6 +75,12 @@ public class FnFMSRepository : IFnFMSRepository
     }
 
     // Method - Folder - UpdateFolderName
+    public async Task UpdateFolderAsync(FolderEntity updatedFolderName)
+    {
+        _context.Folders.Update(updatedFolderName);
+        await _context.SaveChangesAsync();
+    }
+
     // Method - Folder - DeleteFolder
 
     // Method - File - UploadFileToFolder

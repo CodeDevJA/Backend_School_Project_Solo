@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Security.Claims;
+using System;
 using System.Threading.Tasks;
 
 [Authorize]
@@ -16,30 +16,38 @@ public class FnFMSController : ControllerBase
         _fnFMSService = fnFMSService;
     }
 
-    // Endpoints
-    // Folder
-    // CreateRootFolder
+    // Endpoint - Folder - CreateRootFolder
     [HttpPost("folder/create/root-folder")]
     [Authorize]
     public async Task<IActionResult> CreateRootFolder([FromBody] CreateRootFolderRequestDto request)
     {
         try
         {
-            
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var result = await _fnFMSService.CreateRootFolderAsync(userId, request);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            return StatusCode(500, exception.Message);
+            return StatusCode(500, ex.Message);
         }
     }
 
-    // CreateFolderInFolder
-    // UpdateFolderName
-    // DeleteFolder
+    // Endpoint - Folder - CreateFolderInFolder
+    // Endpoint - Folder - UpdateFolderName
+    // Endpoint - Folder - DeleteFolder
 
-    // File
-    // UploadFileToFolder
-    // DownloadFileFromFolder
-    // UpdateFileName
-    // DeleteFile
+    // Endpoint - File - UploadFileToFolder
+    // Endpoint - File - DownloadFileFromFolder
+    // Endpoint - File - UpdateFileName
+    // Endpoint - File - DeleteFile
 }

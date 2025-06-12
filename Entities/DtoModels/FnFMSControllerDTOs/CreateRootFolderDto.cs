@@ -3,8 +3,8 @@ public class CreateRootFolderRequestDto
     public required string FolderName { get; set; }
 }
 
-public class CreateRootFolderResponseDto
+public class FolderResponseDto
 {
-    public required Guid FolderId { get; set; }
-    public required string FolderName { get; set; }
+    public Guid FolderId { get; set; }
+    public string FolderName { get; set; } = string.Empty;
 }

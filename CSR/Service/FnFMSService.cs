@@ -2,6 +2,21 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
+public interface IFnFMSService
+{
+
+    // Method - Folder - CreateRootFolderAsync
+    Task<FolderResponseDto> CreateRootFolderAsync(Guid userId, CreateRootFolderRequestDto request);
+    // Method - Folder - CreateFolderInFolderAsync
+    // Method - Folder - UpdateFolderNameAsync
+    // Method - Folder - DeleteFolderAsync
+
+    // Method - File - UploadFileToFolderAsync
+    // Method - File - DownloadFileFromFolderAsync
+    // Method - File - UpdateFileNameAsync
+    // Method - File - DeleteFileAsync
+}
+
 public class FnFMSService : IFnFMSService
 {
     private readonly IFnFMSRepository _repository;
@@ -11,33 +26,46 @@ public class FnFMSService : IFnFMSService
         _repository = repository;
     }
 
-    // Methods
-    // Folder
-    // CreateRootFolder
-    public async Task<CreateRootFolderResponseDto> CreateRootFolderAsync(string userId, CreateRootFolderRequestDto request)
+    // Method - Folder - CreateRootFolderAsync
+    public async Task<FolderResponseDto> CreateRootFolderAsync(Guid userId, CreateRootFolderRequestDto request)
     {
-        
+        // Fetch the userEntity (navigation object) from the database
+        var userEntity = await _repository.GetUserByIdAsync(userId);
+        if (userEntity is null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        // Assign values and construct FolderEntity
+        var newRootFolder = new FolderEntity
+        {
+            FolderId = Guid.NewGuid(),
+            Foldername = request.FolderName,
+            Folders = new List<FolderEntity>(),
+            Files = new List<FileEntity>(),
+            ParentFolderId = null,
+            ParentFolder = null,  // Root folders don't have a parent
+            ParentUserId = userId,
+            ParentUser = userEntity
+        };
+
+        // Save FolderEntity to database
+        var createdRootFolder = await _repository.CreateRootFolderAsync(newRootFolder);
+
+        // Return response DTO
+        return new FolderResponseDto
+        {
+            FolderId = createdRootFolder.FolderId,
+            FolderName = createdRootFolder.Foldername
+        };
     }
 
-    // CreateFolderInFolder
-    // public async Task<CreateFolderInFolderResponseDto> CreateFolderInFolderAsync(CreateFolderInFolderRequestDto request) { }
+    // Method - Folder - CreateFolderInFolderAsync
+    // Method - Folder - UpdateFolderNameAsync
+    // Method - Folder - DeleteFolderAsync
 
-    // UpdateFolderName
-    // public async Task<UpdateFolderNameResponseDto> UpdateFolderNameAsync(UpdateFolderNameRequestDto request) { }
-
-    // DeleteFolder
-    // public async Task<DeleteFolderResponseDto> DeleteFolderAsync() { }
-
-    // File
-    // UploadFileToFolder
-    // public async Task<UploadFileToFolderResponseDto> UploadFileToFolderAsync(UploadFileToFolderRequestDto request) { }
-
-    // DownloadFileFromFolder
-    // public async Task<DownloadFileFromFolderResponseDto> DownloadFileFromFolderAsync() { }
-
-    // UpdateFileName
-    // public async Task<UpdateFileNameResponseDto> UpdateFileNameAsync(UpdateFileNameRequestDto request) { }
-
-    // DeleteFile
-    // public async Task<DeleteFileResponseDto> DeleteFileAsync() { }
+    // Method - File - UploadFileToFolderAsync
+    // Method - File - DownloadFileFromFolderAsync
+    // Method - File - UpdateFileNameAsync
+    // Method - File - DeleteFileAsync
 }

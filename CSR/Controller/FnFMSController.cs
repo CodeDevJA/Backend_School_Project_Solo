@@ -98,6 +98,32 @@ public class FnFMSController : ControllerBase
     }
 
     // Endpoint - Folder - DeleteFolder
+    [HttpDelete("folder/delete")]
+    [Authorize]
+    public async Task<IActionResult> DeleteFolder([FromBody] DeleteFolderRequestDto request)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var result = await _fnFMSService.DeleteFolderAsync(userId, request);
+            if (!result.Success)
+            {
+                return NotFound(result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
 
     // Endpoint - File - UploadFileToFolder
     // Endpoint - File - DownloadFileFromFolder

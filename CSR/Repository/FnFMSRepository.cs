@@ -20,6 +20,7 @@ public interface IFnFMSRepository
     Task UpdateFolderAsync(FolderEntity updatedFolderName);
 
     // Method - Folder - DeleteFolderAsync
+    Task DeleteFolderAsync(FolderEntity folderEntity);
 
 
     // Method - File - UploadFileToFolderAsync
@@ -82,6 +83,12 @@ public class FnFMSRepository : IFnFMSRepository
     }
 
     // Method - Folder - DeleteFolder
+    public async Task DeleteFolderAsync(FolderEntity folderEntity)
+    {
+        _context.Folders.Remove(folderEntity);
+        await _context.SaveChangesAsync();
+    }
+
 
     // Method - File - UploadFileToFolder
     // Method - File - DownloadFileFromFolder

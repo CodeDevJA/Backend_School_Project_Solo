@@ -7,16 +7,28 @@ public interface IFnFMSRepository
     // Method - User - GetUserById - NavigationObject
     Task<UserEntity?> GetUserByIdAsync(Guid userId);
 
+    // Method - Folder - GetFolderById - NavigationObject
+    Task<FolderEntity?> GetFolderByIdAsync(Guid folderId);
+
     // Method - Folder - CreateRootFolderAsync
     Task<FolderEntity> CreateRootFolderAsync(FolderEntity folder);
+
     // Method - Folder - CreateFolderInFolderAsync
+    Task<FolderEntity> CreateNestedFolderAsync(FolderEntity newNestedFolder);
+
     // Method - Folder - UpdateFolderNameAsync
+
     // Method - Folder - DeleteFolderAsync
 
+
     // Method - File - UploadFileToFolderAsync
+
     // Method - File - DownloadFileFromFolderAsync
+
     // Method - File - UpdateFileNameAsync
+
     // Method - File - DeleteFileAsync
+
 }
 
 public class FnFMSRepository : IFnFMSRepository
@@ -36,6 +48,15 @@ public class FnFMSRepository : IFnFMSRepository
             .FirstOrDefaultAsync(u => u.Id == userId);
     }
 
+    // Method - Folder - GetFolderById - NavigationObject
+    public async Task<FolderEntity?> GetFolderByIdAsync(Guid folderId)
+    {
+        return await _context.Folders
+            .Include(f => f.Folders) // Include nested folders if needed
+            .Include(f => f.Files) // Include files if needed
+            .FirstOrDefaultAsync(f => f.FolderId == folderId);
+    }
+    
     // Method - Folder - CreateRootFolder
     public async Task<FolderEntity> CreateRootFolderAsync(FolderEntity newRootfolder)
     {
@@ -45,6 +66,13 @@ public class FnFMSRepository : IFnFMSRepository
     }
 
     // Method - Folder - CreateFolderInFolder
+    public async Task<FolderEntity> CreateNestedFolderAsync(FolderEntity newNestedFolder)
+    {
+        _context.Folders.Add(newNestedFolder);
+        await _context.SaveChangesAsync();
+        return newNestedFolder;
+    }
+
     // Method - Folder - UpdateFolderName
     // Method - Folder - DeleteFolder
 

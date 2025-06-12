@@ -32,8 +32,9 @@ public class FnFMSController : ControllerBase
             var result = await _fnFMSService.CreateRootFolderAsync(userId, request);
             if (result == null)
             {
-                return BadRequest();
+                return BadRequest("Could not create folder.");
             }
+
             return Ok(result);
         }
         catch (Exception ex)
@@ -43,6 +44,32 @@ public class FnFMSController : ControllerBase
     }
 
     // Endpoint - Folder - CreateFolderInFolder
+    [HttpPost("folder/create/folder-in-folder")]
+    [Authorize]
+    public async Task<IActionResult> CreateFolderInFolder([FromBody] CreateFolderInFolderRequestDto request)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var result = await _fnFMSService.CreateFolderInFolderAsync(userId, request);
+            if (result is null)
+            {
+                return BadRequest("Could not create folder.");
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     // Endpoint - Folder - UpdateFolderName
     // Endpoint - Folder - DeleteFolder
 

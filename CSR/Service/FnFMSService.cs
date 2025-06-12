@@ -7,14 +7,23 @@ public interface IFnFMSService
 
     // Method - Folder - CreateRootFolderAsync
     Task<FolderResponseDto> CreateRootFolderAsync(Guid userId, CreateRootFolderRequestDto request);
+
     // Method - Folder - CreateFolderInFolderAsync
+    Task<FolderResponseDto?> CreateFolderInFolderAsync(Guid userId, CreateFolderInFolderRequestDto request);
+
     // Method - Folder - UpdateFolderNameAsync
+
     // Method - Folder - DeleteFolderAsync
 
+
     // Method - File - UploadFileToFolderAsync
+
     // Method - File - DownloadFileFromFolderAsync
+
     // Method - File - UpdateFileNameAsync
+
     // Method - File - DeleteFileAsync
+    
 }
 
 public class FnFMSService : IFnFMSService
@@ -29,14 +38,14 @@ public class FnFMSService : IFnFMSService
     // Method - Folder - CreateRootFolderAsync
     public async Task<FolderResponseDto> CreateRootFolderAsync(Guid userId, CreateRootFolderRequestDto request)
     {
-        // Fetch the userEntity (navigation object) from the database
+        // Fetch the user entity (navigation object) from the database
         var userEntity = await _repository.GetUserByIdAsync(userId);
         if (userEntity is null)
         {
             throw new Exception("User not found.");
         }
 
-        // Assign values and construct FolderEntity
+        // Assign values and construct folder entity
         var newRootFolder = new FolderEntity
         {
             FolderId = Guid.NewGuid(),
@@ -49,7 +58,7 @@ public class FnFMSService : IFnFMSService
             ParentUser = userEntity
         };
 
-        // Save FolderEntity to database
+        // Save folder entity to database
         var createdRootFolder = await _repository.CreateRootFolderAsync(newRootFolder);
 
         // Return response DTO
@@ -61,6 +70,41 @@ public class FnFMSService : IFnFMSService
     }
 
     // Method - Folder - CreateFolderInFolderAsync
+    public async Task<FolderResponseDto?> CreateFolderInFolderAsync(Guid userId, CreateFolderInFolderRequestDto request)
+    {
+        // Fetch the user entity (navigation object) from the database
+        var userEntity = await _repository.GetUserByIdAsync(userId);
+        if (userEntity is null) throw new Exception("User not found.");
+
+        // Fetch parent folder entity (navigation object) from the database
+        var parentFolder = await _repository.GetFolderByIdAsync(request.ParentFolderId);
+        if (parentFolder is null) throw new Exception("Parent folder not found.");
+
+        // Assign values and construct folder entity
+        var newNestedFolder = new FolderEntity
+        {
+            FolderId = Guid.NewGuid(),
+            Foldername = request.FolderName,
+            Folders = new List<FolderEntity>(),
+            Files = new List<FileEntity>(),
+            ParentFolderId = request.ParentFolderId,
+            ParentFolder = parentFolder,
+            ParentUserId = userId,
+            ParentUser = userEntity
+        };
+
+        // Save folder entity to database
+        var createdNestedFolder = await _repository.CreateNestedFolderAsync(newNestedFolder);
+
+        // Return response DTO
+        return new FolderResponseDto
+        {
+            FolderId = createdNestedFolder.FolderId,
+            FolderName = createdNestedFolder.Foldername
+        };
+    }
+
+
     // Method - Folder - UpdateFolderNameAsync
     // Method - Folder - DeleteFolderAsync
 

@@ -10,10 +10,15 @@ public class FnFMSRepository : IFnFMSRepository
     {
         _context = context;
     }
- 
+
     // Methods
     // Folder
     // CreateRootFolder
+    public async Task<CreateRootFolderResponseDto> CreateRootFolderAsync(FolderEntity inputModel)
+    {
+        
+    }
+    
     // CreateFolderInFolder
     // UpdateFolderName
     // DeleteFolder

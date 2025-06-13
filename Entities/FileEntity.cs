@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 public class FileEntity
 {
@@ -10,6 +11,7 @@ public class FileEntity
     public required string Filename { get; set; }
 
     [Required]
+    [JsonIgnore]
     public required byte[] FileContent { get; set; } = Array.Empty<byte>();
 
 
@@ -18,6 +20,7 @@ public class FileEntity
     public Guid ParentFolderId { get; set; }
     [ForeignKey(nameof(ParentFolderId))]
     [Required]
+    [JsonIgnore]
     public FolderEntity? ParentFolder { get; set; } // FolderEntity?, ? -> supresses issue in "Constructor (Empty for EF)"
 
 

@@ -181,14 +181,10 @@ public class FnFMSService : IFnFMSService
         // Save file to database
         var savedFile = await _repository.SaveFileAsync(newFile);
 
-        // Convert Byte[] to Stream for response
-        var fileStream = new MemoryStream(savedFile.FileContent);
-
         return new UploadFileResponseDto
         {
             FileId = savedFile.FileId,
-            Filename = savedFile.Filename,
-            FileStream = fileStream
+            Filename = savedFile.Filename
         };
     }
 

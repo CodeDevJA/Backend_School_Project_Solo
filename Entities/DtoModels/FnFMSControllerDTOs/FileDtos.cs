@@ -1,14 +1,25 @@
+using System.ComponentModel.DataAnnotations;
+
 // DTO - Request
 public class UploadFileRequestDto
 {
+    [Required]
     public required Guid ParentFolderId { get; set; }
+
+    [Required]
     public required IFormFile File { get; set; } // IFormFile -> Stream -> Byte[]
 }
 
 // DTO - Response
 public class UploadFileResponseDto
 {
-    public Guid FileId { get; set; }
+    public required Guid FileId { get; set; }
     public required string Filename { get; set; }
-    public required Stream FileStream { get; set; } // Byte[] -> Stream -> IFormFile
 }
+
+// public class UploadFileResponseDto
+// {
+//     public Guid FileId { get; set; }
+//     public required string Filename { get; set; }
+//     public required Stream FileStream { get; set; } // Byte[] -> Stream -> IFormFile
+// }

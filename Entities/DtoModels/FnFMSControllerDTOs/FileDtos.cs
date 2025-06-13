@@ -17,10 +17,9 @@ public class UploadFileResponseDto
     public required string Filename { get; set; }
 }
 
-// public class UploadFileResponseDto
-// {
-//     public Guid FileId { get; set; }
-//     public required string Filename { get; set; }
-//     [JsonIgnore]
-//     public required Stream FileStream { get; set; } // Byte[] -> Stream -> IFormFile
-// }
+public class DownloadFileResponseDto
+{
+    public Guid FileId { get; set; }
+    public string Filename { get; set; } = string.Empty;
+    public byte[] Content { get; set; } = Array.Empty<byte>();
+}

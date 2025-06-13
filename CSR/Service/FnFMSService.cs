@@ -22,6 +22,7 @@ public interface IFnFMSService
     Task<UploadFileResponseDto?> UploadFileToFolderAsync(Guid userId, UploadFileRequestDto request);
 
     // Method - File - DownloadFileFromFolderAsync
+    Task<DownloadFileResponseDto?> DownloadFileFromFolderAsync(Guid userId, Guid fileId);
 
     // Method - File - UpdateFileNameAsync
 
@@ -189,6 +190,23 @@ public class FnFMSService : IFnFMSService
     }
 
     // Method - File - DownloadFileFromFolderAsync
+    public async Task<DownloadFileResponseDto?> DownloadFileFromFolderAsync(Guid userId, Guid fileId)
+    {
+        var file = await _repository.GetFileByIdAsync(fileId);
+
+        if (file is null || file.ParentFolder?.ParentUserId != userId)
+        {
+            return null; // Unauthorized or nonexistent file
+        }
+
+        return new DownloadFileResponseDto
+        {
+            FileId = file.FileId,
+            Filename = file.Filename,
+            Content = file.FileContent
+        };
+    }
+    
     // Method - File - UpdateFileNameAsync
     // Method - File - DeleteFileAsync
 }

@@ -153,6 +153,33 @@ public class FnFMSController : ControllerBase
     }
 
     // Endpoint - File - DownloadFileFromFolder
+    // Endpoint - File - DownloadFileFromFolder
+    [HttpGet("file/download/{fileId}")]
+    [Authorize]
+    public async Task<IActionResult> DownloadFileFromFolder(Guid fileId)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var result = await _fnFMSService.DownloadFileFromFolderAsync(userId, fileId);
+            if (result is null)
+            {
+                return NotFound("File not found or unauthorized.");
+            }
+
+            return File(result.Content, "application/octet-stream", result.Filename);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     // Endpoint - File - UpdateFileName
     // Endpoint - File - DeleteFile
 }

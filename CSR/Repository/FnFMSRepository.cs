@@ -67,7 +67,9 @@ public class FnFMSRepository : IFnFMSRepository
     // Method - File - GetFileById - NavigationObject
     public async Task<FileEntity?> GetFileByIdAsync(Guid fileId)
     {
-        return await _context.Files.FirstOrDefaultAsync(f => f.FileId == fileId);
+        return await _context.Files
+            .Include(f => f.ParentFolder)
+            .FirstOrDefaultAsync(f => f.FileId == fileId);
     }
 
     // Method - Folder - CreateRootFolder
@@ -110,6 +112,8 @@ public class FnFMSRepository : IFnFMSRepository
     }
 
     // Method - File - DownloadFileFromFolder
+
+
     // Method - File - UpdateFileName
     // Method - File - DeleteFile
 }

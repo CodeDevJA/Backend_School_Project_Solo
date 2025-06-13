@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 public class FolderEntity
 {
@@ -10,22 +11,26 @@ public class FolderEntity
     public required string Foldername { get; set; }
 
     // Folders in Folder
+    [JsonIgnore]
     public ICollection<FolderEntity>? Folders { get; set; } = new List<FolderEntity>();
 
     // Files in Folder
     [Required]
+    [JsonIgnore]
     public required ICollection<FileEntity> Files { get; set; } = new List<FileEntity>();
 
 
     // ParentFolder
     public Guid? ParentFolderId { get; set; }
     [ForeignKey(nameof(ParentFolderId))]
+    [JsonIgnore]
     public FolderEntity? ParentFolder { get; set; }
 
     // UserAccount
     [Required]
     public required Guid ParentUserId { get; set; }
     [ForeignKey(nameof(ParentUserId))]
+    [JsonIgnore]
     public required UserEntity ParentUser { get; set; }
 
 

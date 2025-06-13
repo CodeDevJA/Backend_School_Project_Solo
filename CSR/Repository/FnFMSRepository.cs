@@ -37,7 +37,7 @@ public interface IFnFMSRepository
     Task UpdateFileAsync(FileEntity updatedFile);
 
     // Method - File - DeleteFileAsync
-
+    Task DeleteFileAsync(FileEntity file);
 }
 
 public class FnFMSRepository : IFnFMSRepository
@@ -124,4 +124,9 @@ public class FnFMSRepository : IFnFMSRepository
     }
 
     // Method - File - DeleteFile
+    public async Task DeleteFileAsync(FileEntity file)
+    {
+        _context.Files.Remove(file);
+        await _context.SaveChangesAsync();
+    }
 }

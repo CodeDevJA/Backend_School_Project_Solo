@@ -30,3 +30,8 @@ public class UpdateFileNameRequestDto
     public required Guid FileId { get; set; }
     public required string NewFilename { get; set; }
 }
+
+public class DeleteFileRequestDto
+{
+    public required Guid FileId { get; set; }
+}

@@ -28,6 +28,7 @@ public interface IFnFMSService
     Task<bool> UpdateFileNameAsync(Guid userId, Guid fileId, string newFilename);
 
     // Method - File - DeleteFileAsync
+    Task<bool> DeleteFileAsync(Guid userId, Guid fileId);
 
 }
 
@@ -225,4 +226,16 @@ public class FnFMSService : IFnFMSService
     }
 
     // Method - File - DeleteFileAsync
+    public async Task<bool> DeleteFileAsync(Guid userId, Guid fileId)
+    {
+        var file = await _repository.GetFileByIdAsync(fileId);
+
+        if (file is null || file.ParentFolder?.ParentUserId != userId)
+        {
+            return false;
+        }
+
+        await _repository.DeleteFileAsync(file);
+        return true;
+    }
 }

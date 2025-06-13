@@ -208,4 +208,29 @@ public class FnFMSController : ControllerBase
     }
 
     // Endpoint - File - DeleteFile
+    [HttpDelete("file/delete")]
+    [Authorize]
+    public async Task<IActionResult> DeleteFile([FromBody] DeleteFileRequestDto request)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var success = await _fnFMSService.DeleteFileAsync(userId, request.FileId);
+            if (!success)
+            {
+                return NotFound("File not found or unauthorized.");
+            }
+
+            return Ok("File deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }

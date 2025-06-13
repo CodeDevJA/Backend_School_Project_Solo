@@ -21,5 +21,6 @@ public class UploadFileResponseDto
 // {
 //     public Guid FileId { get; set; }
 //     public required string Filename { get; set; }
+//     [JsonIgnore]
 //     public required Stream FileStream { get; set; } // Byte[] -> Stream -> IFormFile
 // }

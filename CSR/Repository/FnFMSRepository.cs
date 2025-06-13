@@ -31,8 +31,10 @@ public interface IFnFMSRepository
     Task<FileEntity> SaveFileAsync(FileEntity newFile);
 
     // Method - File - DownloadFileFromFolderAsync
+    // Task<FileEntity?> GetFileByIdAsync(Guid fileId);
 
     // Method - File - UpdateFileNameAsync
+    Task UpdateFileAsync(FileEntity updatedFile);
 
     // Method - File - DeleteFileAsync
 
@@ -112,8 +114,14 @@ public class FnFMSRepository : IFnFMSRepository
     }
 
     // Method - File - DownloadFileFromFolder
-
+    // public async Task<FileEntity?> GetFileByIdAsync(Guid fileId)
 
     // Method - File - UpdateFileName
+    public async Task UpdateFileAsync(FileEntity updatedFile)
+    {
+        _context.Files.Update(updatedFile);
+        await _context.SaveChangesAsync();
+    }
+
     // Method - File - DeleteFile
 }

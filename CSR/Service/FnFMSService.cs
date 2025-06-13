@@ -25,6 +25,7 @@ public interface IFnFMSService
     Task<DownloadFileResponseDto?> DownloadFileFromFolderAsync(Guid userId, Guid fileId);
 
     // Method - File - UpdateFileNameAsync
+    Task<bool> UpdateFileNameAsync(Guid userId, Guid fileId, string newFilename);
 
     // Method - File - DeleteFileAsync
 
@@ -206,7 +207,22 @@ public class FnFMSService : IFnFMSService
             Content = file.FileContent
         };
     }
-    
+
     // Method - File - UpdateFileNameAsync
+    public async Task<bool> UpdateFileNameAsync(Guid userId, Guid fileId, string newFilename)
+    {
+        var file = await _repository.GetFileByIdAsync(fileId);
+
+        if (file is null || file.ParentFolder?.ParentUserId != userId)
+        {
+            return false;
+        }
+
+        file.Filename = newFilename;
+        await _repository.UpdateFileAsync(file);
+
+        return true;
+    }
+
     // Method - File - DeleteFileAsync
 }

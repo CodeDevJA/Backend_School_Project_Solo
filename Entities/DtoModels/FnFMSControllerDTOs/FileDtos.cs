@@ -23,3 +23,10 @@ public class DownloadFileResponseDto
     public string Filename { get; set; } = string.Empty;
     public byte[] Content { get; set; } = Array.Empty<byte>();
 }
+
+// DTO - Request
+public class UpdateFileNameRequestDto
+{
+    public required Guid FileId { get; set; }
+    public required string NewFilename { get; set; }
+}

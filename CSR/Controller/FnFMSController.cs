@@ -181,5 +181,31 @@ public class FnFMSController : ControllerBase
     }
 
     // Endpoint - File - UpdateFileName
+    [HttpPut("file/update-name")]
+    [Authorize]
+    public async Task<IActionResult> UpdateFileName([FromBody] UpdateFileNameRequestDto request)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var success = await _fnFMSService.UpdateFileNameAsync(userId, request.FileId, request.NewFilename);
+            if (!success)
+            {
+                return NotFound("File not found or unauthorized.");
+            }
+
+            return Ok("Filename updated successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     // Endpoint - File - DeleteFile
 }

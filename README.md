@@ -7,7 +7,6 @@ A robust file and folder management system built with ASP.NET Core Web API, feat
 - **User Authentication & Authorization**: Secure user registration and login using ASP.NET Core Identity
 - **File Management**: Upload, organize, and manage files within a folder structure
 - **Folder Hierarchy**: Create nested folders with parent-child relationships
-- **RESTful API**: Clean and intuitive API endpoints for all operations
 - **Database Integration**: PostgreSQL database with Entity Framework Core
 - **Scalable Architecture**: Controller-Service-Repository pattern for maintainable code
 

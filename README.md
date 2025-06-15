@@ -16,7 +16,7 @@ A robust file and folder management system built with ASP.NET Core Web API, feat
 - **Database**: PostgreSQL
 - **ORM**: Entity Framework Core 9.0
 - **Authentication**: ASP.NET Core Identity
-- **API Documentation**: OpenAPI/Swagger with Scalar
+- **API Documentation**: OpenAPI/Swagger with Scalar, XML Documentation
 - **Development Environment**: Visual Studio Code
 - **Version Control**: Git & GitHub
 
@@ -69,6 +69,8 @@ The API will be available at `https://localhost:5001` or `http://localhost:5000`
 When running in development mode, you can access the interactive API documentation at:
 - **Scalar UI**: `http://localhost:5000/scalar/v1`
 - **OpenAPI Spec**: `http://localhost:5000/openapi/v1.json`
+
+The API includes comprehensive XML documentation comments that provide descriptions of the endpoints and methods, enhancing the auto-generated documentation experience.
 
 ## 🏗️ Project Architecture
 

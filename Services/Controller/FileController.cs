@@ -17,6 +17,11 @@ public class FileController : ControllerBase
     }
 
     // Endpoint - File - UploadFileToFolder
+    /// <summary>
+    /// Uploads a file to a specific folder for the authenticated user.
+    /// </summary>
+    /// <param name="request">The file and target folder information.</param>
+    /// <returns>An action result with upload result or error.</returns>
     [HttpPost("upload")]
     [Authorize]
     public async Task<IActionResult> UploadFileToFolder([FromForm] UploadFileRequestDto request)
@@ -44,6 +49,11 @@ public class FileController : ControllerBase
     }
 
     // Endpoint - File - DownloadFileFromFolder
+    /// <summary>
+    /// Downloads a file from a folder for the authenticated user.
+    /// </summary>
+    /// <param name="fileId">The ID of the file to download.</param>
+    /// <returns>The file stream or an error if not found or unauthorized.</returns>
     [HttpGet("download/{fileId}")]
     [Authorize]
     public async Task<IActionResult> DownloadFileFromFolder(Guid fileId)
@@ -71,6 +81,11 @@ public class FileController : ControllerBase
     }
 
     // Endpoint - File - UpdateFileName
+    /// <summary>
+    /// Updates the filename of an existing file for the authenticated user.
+    /// </summary>
+    /// <param name="request">The file ID and the new filename.</param>
+    /// <returns>An action result indicating success or failure.</returns>
     [HttpPut("update-name")]
     [Authorize]
     public async Task<IActionResult> UpdateFileName([FromBody] UpdateFileNameRequestDto request)
@@ -98,6 +113,11 @@ public class FileController : ControllerBase
     }
 
     // Endpoint - File - DeleteFile
+    /// <summary>
+    /// Deletes a file for the authenticated user.
+    /// </summary>
+    /// <param name="request">The file to delete.</param>
+    /// <returns>An action result indicating success or failure.</returns>
     [HttpDelete("delete")]
     [Authorize]
     public async Task<IActionResult> DeleteFile([FromBody] DeleteFileRequestDto request)

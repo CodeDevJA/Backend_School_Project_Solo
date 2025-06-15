@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -28,6 +27,7 @@ public class Program
 
         builder.Services.AddControllers();
         
+        // FnFMS - Folder and File Management System
         builder.Services.AddScoped<IFnFMSService, FnFMSService>();
         builder.Services.AddScoped<IFnFMSRepository, FnFMSRepository>();
 
@@ -37,7 +37,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.MapScalarApiReference();
+            app.MapScalarApiReference(); // Access WebAPI-Testing, via URL: domain + scalar/v1 (in a browser)
         }
 
         app.UseHttpsRedirection();

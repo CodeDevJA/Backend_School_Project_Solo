@@ -17,6 +17,11 @@ public class FolderController : ControllerBase
     }
 
     // Endpoint - Folder - CreateRootFolder
+    /// <summary>
+    /// Creates a root folder for the authenticated user.
+    /// </summary>
+    /// <param name="request">The details of the root folder to create.</param>
+    /// <returns>An action result indicating success or failure.</returns>
     [HttpPost("create/root-folder")]
     [Authorize]
     public async Task<IActionResult> CreateRootFolder([FromBody] CreateRootFolderRequestDto request)
@@ -44,6 +49,11 @@ public class FolderController : ControllerBase
     }
 
     // Endpoint - Folder - CreateFolderInFolder
+    /// <summary>
+    /// Creates a folder within an existing folder for the authenticated user.
+    /// </summary>
+    /// <param name="request">The details of the folder to create.</param>
+    /// <returns>An action result indicating success or failure.</returns>
     [HttpPost("create/folder-in-folder")]
     [Authorize]
     public async Task<IActionResult> CreateFolderInFolder([FromBody] CreateFolderInFolderRequestDto request)
@@ -71,6 +81,11 @@ public class FolderController : ControllerBase
     }
 
     // Endpoint - Folder - UpdateFolderName
+    /// <summary>
+    /// Updates the name of a folder for the authenticated user.
+    /// </summary>
+    /// <param name="request">The folder ID and new name.</param>
+    /// <returns>An action result indicating success or failure.</returns>
     [HttpPut("update/name")]
     [Authorize]
     public async Task<IActionResult> UpdateFolderName([FromBody] UpdateFolderNameRequestDto request)
@@ -98,6 +113,11 @@ public class FolderController : ControllerBase
     }
 
     // Endpoint - Folder - DeleteFolder
+    /// <summary>
+    /// Deletes a folder for the authenticated user.
+    /// </summary>
+    /// <param name="request">The folder to be deleted.</param>
+    /// <returns>An action result indicating success or failure.</returns>
     [HttpDelete("delete")]
     [Authorize]
     public async Task<IActionResult> DeleteFolder([FromBody] DeleteFolderRequestDto request)

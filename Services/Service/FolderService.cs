@@ -12,6 +12,12 @@ public class FolderService : IFolderService
     }
 
     // Method - Folder - CreateRootFolderAsync
+    /// <summary>
+    /// Creates a new root folder for the specified user.
+    /// </summary>
+    /// <param name="userId">The ID of the user creating the folder.</param>
+    /// <param name="request">The folder creation request DTO.</param>
+    /// <returns>A response DTO containing the created folder's information.</returns>
     public async Task<FolderResponseDto> CreateRootFolderAsync(Guid userId, CreateRootFolderRequestDto request)
     {
         // Fetch the user entity (navigation object) from the database
@@ -46,6 +52,12 @@ public class FolderService : IFolderService
     }
 
     // Method - Folder - CreateFolderInFolderAsync
+    /// <summary>
+    /// Creates a new folder inside an existing parent folder.
+    /// </summary>
+    /// <param name="userId">The ID of the user creating the folder.</param>
+    /// <param name="request">The request DTO containing parent folder ID and new folder name.</param>
+    /// <returns>A response DTO containing the created nested folder's details.</returns>
     public async Task<FolderResponseDto?> CreateFolderInFolderAsync(Guid userId, CreateFolderInFolderRequestDto request)
     {
         // Fetch the user entity (navigation object) from the database
@@ -81,6 +93,12 @@ public class FolderService : IFolderService
     }
 
     // Method - Folder - UpdateFolderNameAsync
+    /// <summary>
+    /// Updates the name of an existing folder.
+    /// </summary>
+    /// <param name="userId">The ID of the user requesting the update.</param>
+    /// <param name="request">The request DTO containing the folder ID and new name.</param>
+    /// <returns>A response DTO with the updated folder's information.</returns>
     public async Task<FolderResponseDto?> UpdateFolderNameAsync(Guid userId, UpdateFolderNameRequestDto request)
     {
         // Fetch folder entity
@@ -103,6 +121,12 @@ public class FolderService : IFolderService
     }
 
     // Method - Folder - DeleteFolderAsync
+    /// <summary>
+    /// Deletes the specified folder for the given user.
+    /// </summary>
+    /// <param name="userId">The ID of the user deleting the folder.</param>
+    /// <param name="request">The request DTO containing the folder ID.</param>
+    /// <returns>A response DTO indicating whether the folder was deleted.</returns>
     public async Task<DeleteFolderResponseDto> DeleteFolderAsync(Guid userId, DeleteFolderRequestDto request)
     {
         // Fetch folder entity

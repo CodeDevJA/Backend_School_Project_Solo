@@ -19,6 +19,13 @@ public class AuthController : ControllerBase
         this.userManager = userManager;
     }
 
+    /// <summary>
+    /// A secured test endpoint that returns a greeting for the authenticated user.
+    /// </summary>
+    /// <returns>
+    /// 200 OK with a greeting message if the user is authenticated and exists;
+    /// otherwise, 401 Unauthorized.
+    /// </returns>
     [HttpGet("first")]
     [Authorize]
     public IActionResult SecuredEndpoint()
@@ -48,6 +55,13 @@ public class AuthController : ControllerBase
         return Ok("Hello " + user.UserName + "!");
     }
 
+    /// <summary>
+    /// Registers a new user with the provided username and password.
+    /// </summary>
+    /// <param name="request">The registration request containing username and password.</param>
+    /// <returns>
+    /// 200 OK if registration succeeds; otherwise, 400 Bad Request with validation errors.
+    /// </returns>
     [HttpPost("register-user")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequest request)
     {

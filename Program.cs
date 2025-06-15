@@ -27,8 +27,11 @@ public class Program
 
         builder.Services.AddControllers();
         
-        // FnFMS - Folder and File Management System
-        builder.Services.AddScoped<IFnFMSService, FnFMSService>();
+        // FolderService
+        builder.Services.AddScoped<IFolderService, FolderService>();
+        // FileService
+        builder.Services.AddScoped<IFileService, FileService>();
+        // FnFMS - Folder and File Management System - Repository
         builder.Services.AddScoped<IFnFMSRepository, FnFMSRepository>();
 
         var app = builder.Build();
@@ -37,7 +40,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.MapScalarApiReference(); // Access WebAPI-Testing, via URL: domain + scalar/v1 (in a browser)
+            app.MapScalarApiReference(); // Access WebAPI-Testing, via URL: http://localhost:5000 + scalar/v1 (in a browser)
         }
 
         app.UseHttpsRedirection();

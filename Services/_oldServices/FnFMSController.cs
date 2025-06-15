@@ -1,0 +1,236 @@
+// using Microsoft.AspNetCore.Authorization;
+// using Microsoft.AspNetCore.Mvc;
+// using System.Security.Claims;
+// using System;
+// using System.Threading.Tasks;
+
+// [Authorize]
+// [Route("api/[controller]")]
+// [ApiController]
+// public class FnFMSController : ControllerBase
+// {
+//     private readonly IFnFMSService _fnFMSService;
+
+//     public FnFMSController(IFnFMSService fnFMSService)
+//     {
+//         _fnFMSService = fnFMSService;
+//     }
+
+//     // Endpoint - Folder - CreateRootFolder
+//     [HttpPost("folder/create/root-folder")]
+//     [Authorize]
+//     public async Task<IActionResult> CreateRootFolder([FromBody] CreateRootFolderRequestDto request)
+//     {
+//         try
+//         {
+//             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+//             if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+//             {
+//                 return Unauthorized();
+//             }
+
+//             var result = await _fnFMSService.CreateRootFolderAsync(userId, request);
+//             if (result == null)
+//             {
+//                 return BadRequest("Could not create folder.");
+//             }
+
+//             return Ok(result);
+//         }
+//         catch (Exception ex)
+//         {
+//             return StatusCode(500, ex.Message);
+//         }
+//     }
+
+//     // Endpoint - Folder - CreateFolderInFolder
+//     [HttpPost("folder/create/folder-in-folder")]
+//     [Authorize]
+//     public async Task<IActionResult> CreateFolderInFolder([FromBody] CreateFolderInFolderRequestDto request)
+//     {
+//         try
+//         {
+//             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+//             if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+//             {
+//                 return Unauthorized();
+//             }
+
+//             var result = await _fnFMSService.CreateFolderInFolderAsync(userId, request);
+//             if (result is null)
+//             {
+//                 return BadRequest("Could not create folder.");
+//             }
+
+//             return Ok(result);
+//         }
+//         catch (Exception ex)
+//         {
+//             return StatusCode(500, ex.Message);
+//         }
+//     }
+
+//     // Endpoint - Folder - UpdateFolderName
+//     [HttpPut("folder/update/name")]
+//     [Authorize]
+//     public async Task<IActionResult> UpdateFolderName([FromBody] UpdateFolderNameRequestDto request)
+//     {
+//         try
+//         {
+//             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+//             if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+//             {
+//                 return Unauthorized();
+//             }
+
+//             var result = await _fnFMSService.UpdateFolderNameAsync(userId, request);
+//             if (result is null)
+//             {
+//                 return NotFound("Folder not found or update failed.");
+//             }
+
+//             return Ok(result);
+//         }
+//         catch (Exception ex)
+//         {
+//             return StatusCode(500, ex.Message);
+//         }
+//     }
+
+//     // Endpoint - Folder - DeleteFolder
+//     [HttpDelete("folder/delete")]
+//     [Authorize]
+//     public async Task<IActionResult> DeleteFolder([FromBody] DeleteFolderRequestDto request)
+//     {
+//         try
+//         {
+//             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+//             if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+//             {
+//                 return Unauthorized();
+//             }
+
+//             var result = await _fnFMSService.DeleteFolderAsync(userId, request);
+//             if (!result.Success)
+//             {
+//                 return NotFound(result);
+//             }
+
+//             return Ok(result);
+//         }
+//         catch (Exception ex)
+//         {
+//             return StatusCode(500, ex.Message);
+//         }
+//     }
+
+
+//     // Endpoint - File - UploadFileToFolder
+//     [HttpPost("file/upload")]
+//     [Authorize]
+//     public async Task<IActionResult> UploadFileToFolder([FromForm] UploadFileRequestDto request)
+//     {
+//         try
+//         {
+//             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+//             if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+//             {
+//                 return Unauthorized();
+//             }
+
+//             var result = await _fnFMSService.UploadFileToFolderAsync(userId, request);
+//             if (result is null)
+//             {
+//                 return BadRequest("File upload failed.");
+//             }
+
+//             return Ok(result);
+//         }
+//         catch (Exception ex)
+//         {
+//             return StatusCode(500, ex.Message);
+//         }
+//     }
+
+//     // Endpoint - File - DownloadFileFromFolder
+//     // Endpoint - File - DownloadFileFromFolder
+//     [HttpGet("file/download/{fileId}")]
+//     [Authorize]
+//     public async Task<IActionResult> DownloadFileFromFolder(Guid fileId)
+//     {
+//         try
+//         {
+//             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+//             if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+//             {
+//                 return Unauthorized();
+//             }
+
+//             var result = await _fnFMSService.DownloadFileFromFolderAsync(userId, fileId);
+//             if (result is null)
+//             {
+//                 return NotFound("File not found or unauthorized.");
+//             }
+
+//             return File(result.Content, "application/octet-stream", result.Filename);
+//         }
+//         catch (Exception ex)
+//         {
+//             return StatusCode(500, ex.Message);
+//         }
+//     }
+
+//     // Endpoint - File - UpdateFileName
+//     [HttpPut("file/update-name")]
+//     [Authorize]
+//     public async Task<IActionResult> UpdateFileName([FromBody] UpdateFileNameRequestDto request)
+//     {
+//         try
+//         {
+//             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+//             if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+//             {
+//                 return Unauthorized();
+//             }
+
+//             var success = await _fnFMSService.UpdateFileNameAsync(userId, request.FileId, request.NewFilename);
+//             if (!success)
+//             {
+//                 return NotFound("File not found or unauthorized.");
+//             }
+
+//             return Ok("Filename updated successfully.");
+//         }
+//         catch (Exception ex)
+//         {
+//             return StatusCode(500, ex.Message);
+//         }
+//     }
+
+//     // Endpoint - File - DeleteFile
+//     [HttpDelete("file/delete")]
+//     [Authorize]
+//     public async Task<IActionResult> DeleteFile([FromBody] DeleteFileRequestDto request)
+//     {
+//         try
+//         {
+//             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+//             if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+//             {
+//                 return Unauthorized();
+//             }
+
+//             var success = await _fnFMSService.DeleteFileAsync(userId, request.FileId);
+//             if (!success)
+//             {
+//                 return NotFound("File not found or unauthorized.");
+//             }
+
+//             return Ok("File deleted successfully.");
+//         }
+//         catch (Exception ex)
+//         {
+//             return StatusCode(500, ex.Message);
+//         }
+//     }
+// }

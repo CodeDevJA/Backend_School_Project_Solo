@@ -140,20 +140,20 @@ Backend_School_Project_Solo/
 ## 🚦 API Endpoints
 
 ### Authentication
-- `POST /api/Auth/register-user`             - Register a new user
-- `POST /login`                              - User login
+- `POST /api/Auth/register-user` - Register a new user
+- `POST /login` - User login
 
 ### Folders
-- `POST /api/Folder/create/root-folder`      - Create a new root folder
+- `POST /api/Folder/create/root-folder` - Create a new root folder
 - `POST /api/Folder/create/folder-in-folder` - Create a new sub folder
-- `PUT /api/Folder/update/name`              - Update folder
-- `DELETE /api/Folder/delete`                - Delete folder
+- `PUT /api/Folder/update/name` - Update folder
+- `DELETE /api/Folder/delete` - Delete folder
 
 ### Files
-- `POST /api/File/upload`                    - Upload a file
-- `GET /api/File/download/{fileId}`          - Download file
-- `PUT /api/File/update-name`                - Update file name
-- `DELETE /api/File/delete`                  - Delete file
+- `POST /api/File/upload` - Upload a file
+- `GET /api/File/download/{fileId}` - Download file
+- `PUT /api/File/update-name` - Update file name
+- `DELETE /api/File/delete` - Delete file
 
 *Note: Detailed API documentation is available through the Scalar interface when running the application.*
 
